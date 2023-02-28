@@ -3,6 +3,7 @@
 
 #include <Godot.hpp>
 #include <Sprite.hpp>
+#include <Input.hpp>
 
 namespace godot {
 
@@ -14,6 +15,8 @@ private:
     float time_emit;
     float amplitude;
     float speed;
+    Input* input;
+    Vector2 position;
 
 public:
     static void _register_methods();
@@ -28,7 +31,4 @@ public:
     float get_speed();
 };
 }
-
-
-
 #endif

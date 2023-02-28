@@ -11,6 +11,7 @@ void GDExample::_register_methods() {
 }
 
 GDExample::GDExample() {
+    input = Input::get_singleton();
 }
 
 GDExample::~GDExample() {
@@ -19,6 +20,7 @@ GDExample::~GDExample() {
 
 void GDExample::_init() {
     // initialize any variables here
+    position = Vector2(0, 0);
     time_passed = 0.0;
     time_emit = 0.0;
     amplitude = 10.0;
@@ -26,24 +28,34 @@ void GDExample::_init() {
 }
 
 void GDExample::_process(float delta) {
-    time_passed += speed * delta;
+    //time_passed += speed * delta;
 
-    Vector2 new_position = Vector2(
-        amplitude + (amplitude * sin(time_passed * 2.0)),
-        amplitude + (amplitude * cos(time_passed * 1.5))
-    );
+    // Vector2 new_position = Vector2(
+    //     amplitude + (amplitude * sin(time_passed * 2.0)),
+    //     amplitude + (amplitude * cos(time_passed * 1.5))
+    // );
 
-    set_position(new_position);
+    Vector2 direction(0, 0);
+    if (input->is_action_pressed("move_left")) 
+    {
+        direction.x = -1;
+    }
+    if (input->is_action_pressed("move_right")) 
+    {
+        direction.x = 1;
+    }
+
+    position = position + direction * speed * delta;
+
+    set_position(position);
 
     
     time_emit += delta;
     if (time_emit > 1.0) {
-        emit_signal("position_changed", this, new_position);
+        emit_signal("position_changed", this, position);
 
         time_emit = 0.0;
     }
-
-    
 }
 
 void GDExample::set_speed(float _speed) {

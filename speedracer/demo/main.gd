@@ -18,3 +18,7 @@ func _ready():
 
 func _on_Sprite_position_changed(node, new_pos):
 	print("The position of " + node.name + " is now " + str(new_pos))
+
+
+func _on_Enemy1_enemy_death():
+	pass # Replace with function body.

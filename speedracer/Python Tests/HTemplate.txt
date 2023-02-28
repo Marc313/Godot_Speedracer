@@ -1,0 +1,20 @@
+#include <Godot.hpp>
+#include <Node.hpp>
+
+namespace godot {
+
+class CLASS_NAME : public Node {
+    GODOT_CLASS(CLASS_NAME, Node)
+
+private:
+
+public:
+    static void _register_methods();
+
+    CLASS_NAME();
+    ~CLASS_NAME();
+
+    void _init();
+    void _ready();
+    void _process(float delta);
+};}
