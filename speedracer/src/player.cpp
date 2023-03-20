@@ -2,21 +2,23 @@
 
 #include "player.h"
 #include <KinematicCollision2D.hpp>
+#include <string>
 
 using namespace godot;
 
 void Player::_register_methods() {
     register_method("_process", &Player::_process);
+    register_method("_ready", &Player::_ready);
     register_method("_physics_process", &Player::_physics_process);
 
     register_property<Player, float>("acceleration", &Player::acceleration, 10000.0f);
     register_property<Player, float>("friction", &Player::friciton, 10.0f);
 
-    register_signal<Player>((char *)"position_changed", "node", GODOT_VARIANT_TYPE_OBJECT, "new_pos", GODOT_VARIANT_TYPE_VECTOR2);
+    //register_signal<Player>((char *)"position_changed", "node", GODOT_VARIANT_TYPE_OBJECT, "new_pos", GODOT_VARIANT_TYPE_VECTOR2);
+    register_signal<Player>((char *)"player_death");
 }
 
 Player::Player() {
-    input = Input::get_singleton();
 }
 
 Player::~Player() {
@@ -31,6 +33,12 @@ void Player::_init() {
     acceleration = 10000.0f;
     friciton = acceleration/speed;
     velocity = Vector2();
+}
+
+void godot::Player::_ready()
+{
+    input = Input::get_singleton();
+    startPos = get_position();
 }
 
 void Player::_process(float delta) {
@@ -55,21 +63,33 @@ void Player::_physics_process(float delta) {
     move_and_slide(velocity);
 
     check_collisions();
+
 }
 
 void Player::check_collisions() {
     for (int i = 0; i < get_slide_count(); i++)
     {
         auto collision = get_slide_collision(i);
-        // if (collision->get_collider()) {
+        Godot::print("Collision");
+        emit_signal("player_death");
 
-        // }
+        Node2D* colliderNode = static_cast<Node2D*>(collision->get_collider());
+
+        // If collider is in enemy group, player is hit.
+        if ((colliderNode->is_in_group("Enemy"))) {
+            Godot::print("Collision");
+        }
     }
     
 }
 
+void godot::Player::_on_start()
+{
+    set_position(startPos);
+}
 
-void Player::set_speed(float _speed) {
+void Player::set_speed(float _speed)
+{
     speed = _speed;
 }
 

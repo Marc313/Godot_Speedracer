@@ -1,17 +1,19 @@
 #pragma once
 
 #include <Godot.hpp>
-#include <Node.hpp>
+#include <Node2D.hpp>
 #include <Label.hpp>
 
 namespace godot {
 
-class UIManager : public Label {
-    GODOT_CLASS(UIManager, Label)
+class UIManager : public Node2D {
+    GODOT_CLASS(UIManager, Node2D)
 
 private:
-    int score;
+    Label* scoreLabel;
+    Label* endLabel;
 
+    int score;
     void UpdateScoreText();
 
 public:
@@ -24,6 +26,8 @@ public:
     void _ready();
     void _process(float delta);
 
-    // Public or private?
+    // Receiving Signals
     void _on_enemy_death();
+    void _on_player_death();
+    void _on_game_start();
 };}

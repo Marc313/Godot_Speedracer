@@ -1,5 +1,18 @@
 {
     "files.associations": {
-        "string": "cpp"
+        "string": "cpp",
+        "vector": "cpp",
+        "atomic": "cpp",
+        "algorithm": "cpp",
+        "istream": "cpp",
+        "memory": "cpp",
+        "ostream": "cpp",
+        "system_error": "cpp",
+        "xhash": "cpp",
+        "xlocale": "cpp",
+        "xlocnum": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp",
+        "limits": "cpp"
     }
 }

@@ -15,6 +15,7 @@ private:
     float acceleration;
     float friciton;
     Vector2 velocity;
+    Vector2 startPos;
 
     Input* input;
     //Vector2 position;
@@ -28,9 +29,11 @@ public:
     ~Player();
 
     void _init();
+    void _ready();
     void _process(float delta);
     void _physics_process(float delta);
 
+    void _on_start();
     void set_speed(float p_speed);
     float get_speed();
 };
