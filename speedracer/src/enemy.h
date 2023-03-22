@@ -31,7 +31,7 @@ public:
     void _physics_process(float delta);
     void _process(float delta);
     void on_start(Vector2 _startPos, Vector2 _direction, float _speed);
-    void test();
+    void test(Vector2 _startPos, Vector2 _direction, float _speed);
 
 // Temp
         float speed;

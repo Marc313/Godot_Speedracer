@@ -21,7 +21,7 @@ private:
     Node* uiManager;
 
     void _on_game_start();
-    void start_enemies();
+    //void start_enemies();
     Vector2 get_random_screenpos();
     float get_random_speed(Enemy* enemy);
 

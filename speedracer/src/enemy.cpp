@@ -36,10 +36,16 @@ void Enemy::_init() {
 }
 
 void Enemy::_ready() {
+    speed = get_random_speed();
+    set_position(get_random_screenpos());
+    direction = get_random_direction();
+
+
     Godot::print("Hello");
     Godot::print(("Speed: " + std::to_string(speed)).c_str());
+    Godot::print(("Min_Speed: " + std::to_string(min_speed)).c_str());
+    Godot::print(("Max_Speed: " + std::to_string(max_speed)).c_str());
     //set_position(Vector2(100.0f, 100.0f));
-    //on_start();
 }
 
 void Enemy::_process(float delta) {
@@ -58,8 +64,8 @@ void Enemy::_physics_process(float delta) {
     // set_position(pos);
 
     // Variant 2: Change enemy xdirection
-    //if (pos.x < 0 || pos.x > get_viewport_rect().get_size().x)
-    //direction.x = EnemyManager::get_random_direction().x;
+    if (pos.x < 0 || pos.x > get_viewport_rect().get_size().x)
+    direction.x = EnemyManager::get_random_direction().x;
 }
 
 // void Enemy::on_start() {
@@ -79,30 +85,34 @@ void Enemy::on_start(Vector2 _startPos, Vector2 _direction, float _speed) {
     //Godot::print(("Speed: " + std::to_string(speed)).c_str());
 }
 
-void godot::Enemy::test()
+void Enemy::test(Vector2 _startPos, Vector2 _direction, float _speed)
 {
-    Godot::print("TEST");
+    //Godot::print("TEST");
+    speed = _speed;
+    direction = _direction;
+    set_position(_startPos);
 }
 
 void Enemy::onDeath() {
     emit_signal("enemy_death");
+    _ready();
     //on_start();
 }
 
-// Vector2 Enemy::get_random_screenpos() {
-//     int screenSizeX = get_viewport_rect().get_size().y;
-//     float startX = rand() % screenSizeX;
-//     Vector2 startPos = Vector2(startX, 0);
-//     return startPos;
-// }
+Vector2 Enemy::get_random_screenpos() {
+    int screenSizeX = get_viewport_rect().get_size().y;
+    float startX = rand() % screenSizeX;
+    Vector2 startPos = Vector2(startX, 0);
+    return startPos;
+}
 
-// Vector2 Enemy::get_random_direction() {
-//     float randX = rand() % 200 - 100;
-//     float randY = rand() % 100 + 1;
-//     return Vector2(randX, randY).normalized();
-// }
+Vector2 Enemy::get_random_direction() {
+    float randX = rand() % 200 - 100;
+    float randY = rand() % 100 + 1;
+    return Vector2(randX, randY).normalized();
+}
 
-// float Enemy::get_random_speed() {
-//     int randInterval = max_speed - min_speed;
-//     return (rand() % randInterval + min_speed)/3;
-// }
+float Enemy::get_random_speed() {
+    int randInterval = max_speed - min_speed;
+    return (rand() % randInterval + min_speed);
+}

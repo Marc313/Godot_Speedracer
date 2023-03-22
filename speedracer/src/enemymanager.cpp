@@ -40,21 +40,21 @@ void EnemyManager::_ready() {
     _on_game_start();
 }
 
-void godot::EnemyManager::_process(float delta)
+void EnemyManager::_process(float delta)
 {
-    if (isTimer) 
-    {
-        timer -= delta;
-        if (timer < 0.0f) 
-        {
-            start_enemies();
-            isTimer = false;
-            timer = 0.5f;
-        }
-    }
+    // if (isTimer) 
+    // {
+    //     timer -= delta;
+    //     if (timer < 0.0f) 
+    //     {
+    //         //start_enemies();
+    //         isTimer = false;
+    //         timer = 0.5f;
+    //     }
+    // }
 }
 
-void godot::EnemyManager::_on_game_start()
+void EnemyManager::_on_game_start()
 {
     //Godot::print(std::to_string(enemies.size()).c_str());
 
@@ -62,15 +62,18 @@ void godot::EnemyManager::_on_game_start()
     while (numOfEnemies > enemies.size()) {
         Enemy* enemy = static_cast<Enemy*>(enemyPrefab->instance());
         add_child(enemy);
-        //enemy->connect("enemy_death", uiManager, "_on_enemy_death");
+        enemy->connect("enemy_death", uiManager, "_on_enemy_death");
         enemies.push_back(enemy);
 
         Vector2 startPos = Vector2(100.0f, 100.0f);//get_random_screenpos();
         Vector2 direction = Vector2(1.0f, 1.0f);//get_random_direction();
         float speed = 5000.0f;//get_random_speed(enemyPtr);
 
-        isTimer = true;
-        timer = 0.5f;
+        //enemy->test(startPos, direction, speed);
+
+        // start_enemies();
+        // isTimer = true;
+        // timer = 0.5f;
         //enemy->set_position(startPos);
         //enemy->direction = direction;
         //enemy->speed = speed;
@@ -90,17 +93,17 @@ void godot::EnemyManager::_on_game_start()
 
 }
 
-void EnemyManager::start_enemies() 
-{
-    for (size_t i = 0; i < enemies.size(); i++) {
-        Enemy* enemyPtr = enemies.at(i);
-        Vector2 startPos = Vector2(100.0f, 100.0f); //get_random_screenpos();
-        Vector2 direction = Vector2(1.0f, 1.0f); //get_random_direction();
-        float speed = 5.0f; //get_random_speed(enemyPtr);
+// void EnemyManager::start_enemies() 
+// {
+//     for (int i = 0; i < enemies.size(); i++) {
+//         Enemy* enemyPtr = enemies.at(i);
+//         Vector2 startPos = Vector2(100.0f, 100.0f); //get_random_screenpos();
+//         Vector2 direction = Vector2(1.0f, 1.0f); //get_random_direction();
+//         float speed = 5000.0f; //get_random_speed(enemyPtr);
 
-        enemyPtr->on_start(startPos, direction, speed);
-    }
-}
+//         enemyPtr->on_start(startPos, direction, speed);
+//     }
+// }
 
 Vector2 EnemyManager::get_random_screenpos() {
     int screenSizeX = get_viewport_rect().get_size().y;
