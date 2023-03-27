@@ -14,6 +14,8 @@ void Enemy::_register_methods() {
     register_method("_physics_process", &Enemy::_physics_process);
 
     // Signals
+    register_method("_on_game_end", &Enemy::_on_game_end);
+    register_method("_on_game_start", &Enemy::_ready);
     register_signal<Enemy>("enemy_death");
 
     // Properties
@@ -65,7 +67,7 @@ void Enemy::_physics_process(float delta) {
 
     // Variant 2: Change enemy xdirection
     if (pos.x < 0 || pos.x > get_viewport_rect().get_size().x)
-    direction.x = EnemyManager::get_random_direction().x;
+    direction.x = get_random_direction().x;
 }
 
 // void Enemy::on_start() {
@@ -76,6 +78,11 @@ void Enemy::_physics_process(float delta) {
 //     Godot::print(("Speed: " + std::to_string(speed)).c_str());
 // }
 
+void Enemy::_on_game_end() {
+    this->queue_free();
+}
+
+// Cursed function
 void Enemy::on_start(Vector2 _startPos, Vector2 _direction, float _speed) {
     speed = _speed;
     direction = _direction;

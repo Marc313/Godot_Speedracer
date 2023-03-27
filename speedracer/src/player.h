@@ -34,6 +34,7 @@ public:
     void _physics_process(float delta);
 
     void _on_start();
+    void on_death();
     void set_speed(float p_speed);
     float get_speed();
 };

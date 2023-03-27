@@ -5,11 +5,11 @@
 
 [sub_resource type="RectangleShape2D" id=1]
 
-[node name="Enemy" type="KinematicBody2D"]
+[node name="Enemy" type="KinematicBody2D" groups=["Enemy"]]
 collision_layer = 2
 script = ExtResource( 1 )
-min_speed = 2000.0
-max_speed = 3000.0
+min_speed = 4000.0
+max_speed = 6000.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

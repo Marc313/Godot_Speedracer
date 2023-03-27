@@ -19,9 +19,9 @@ private:
     std::vector<Enemy*> enemies;
     Ref<PackedScene> enemyPrefab;
     Node* uiManager;
+    Node* gameManager;
 
     void _on_game_start();
-    //void start_enemies();
     Vector2 get_random_screenpos();
     float get_random_speed(Enemy* enemy);
 

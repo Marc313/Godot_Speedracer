@@ -30,11 +30,12 @@ public:
     void _ready();
     void _physics_process(float delta);
     void _process(float delta);
+    void _on_game_end();
     void on_start(Vector2 _startPos, Vector2 _direction, float _speed);
     void test(Vector2 _startPos, Vector2 _direction, float _speed);
 
 // Temp
-        float speed;
+    float speed;
     Vector2 startPosition;
     Vector2 direction;
 };}

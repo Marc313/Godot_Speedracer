@@ -11,10 +11,11 @@ void Player::_register_methods() {
     register_method("_ready", &Player::_ready);
     register_method("_physics_process", &Player::_physics_process);
 
+    register_method("_on_start", &Player::_on_start);
+
     register_property<Player, float>("acceleration", &Player::acceleration, 10000.0f);
     register_property<Player, float>("friction", &Player::friciton, 10.0f);
 
-    //register_signal<Player>((char *)"position_changed", "node", GODOT_VARIANT_TYPE_OBJECT, "new_pos", GODOT_VARIANT_TYPE_VECTOR2);
     register_signal<Player>((char *)"player_death");
 }
 
@@ -63,29 +64,31 @@ void Player::_physics_process(float delta) {
     move_and_slide(velocity);
 
     check_collisions();
-
 }
 
 void Player::check_collisions() {
     for (int i = 0; i < get_slide_count(); i++)
     {
         auto collision = get_slide_collision(i);
-        Godot::print("Collision");
-        emit_signal("player_death");
-
         Node2D* colliderNode = static_cast<Node2D*>(collision->get_collider());
 
         // If collider is in enemy group, player is hit.
         if ((colliderNode->is_in_group("Enemy"))) {
-            Godot::print("Collision");
+            on_death();
         }
     }
-    
 }
 
-void godot::Player::_on_start()
+void Player::_on_start()
 {
+    this->set_visible(true);
     set_position(startPos);
+}
+
+void Player::on_death() {
+    Godot::print("Collision");
+    this->set_visible(false);
+    emit_signal("player_death");
 }
 
 void Player::set_speed(float _speed)

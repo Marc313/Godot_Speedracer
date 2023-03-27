@@ -23,6 +23,7 @@ EnemyManager::EnemyManager() {
 
 EnemyManager::~EnemyManager() {
     delete uiManager;
+    delete gameManager;
 }
 
 void EnemyManager::_init() {
@@ -36,93 +37,51 @@ void EnemyManager::_ready() {
     enemyPrefab = loader->load("res://_scenes/Enemy.tscn");
 
     uiManager = (Node*)get_node("../UIManager");
+    gameManager = (Node*)get_node("/root/Main");
     enemies = std::vector<Enemy*>();
     _on_game_start();
 }
 
 void EnemyManager::_process(float delta)
 {
-    // if (isTimer) 
-    // {
-    //     timer -= delta;
-    //     if (timer < 0.0f) 
-    //     {
-    //         //start_enemies();
-    //         isTimer = false;
-    //         timer = 0.5f;
-    //     }
-    // }
+
 }
 
 void EnemyManager::_on_game_start()
 {
-    //Godot::print(std::to_string(enemies.size()).c_str());
-
-    // If there are not enough enemies, create new enemies.
+    enemies.clear();
     while (numOfEnemies > enemies.size()) {
         Enemy* enemy = static_cast<Enemy*>(enemyPrefab->instance());
         add_child(enemy);
         enemy->connect("enemy_death", uiManager, "_on_enemy_death");
+        gameManager->connect("on_game_start", enemy, "_on_game_start");
+        gameManager->connect("on_game_end", enemy, "_on_game_end");
         enemies.push_back(enemy);
 
-        Vector2 startPos = Vector2(100.0f, 100.0f);//get_random_screenpos();
-        Vector2 direction = Vector2(1.0f, 1.0f);//get_random_direction();
-        float speed = 5000.0f;//get_random_speed(enemyPtr);
-
-        //enemy->test(startPos, direction, speed);
-
-        // start_enemies();
-        // isTimer = true;
-        // timer = 0.5f;
-        //enemy->set_position(startPos);
-        //enemy->direction = direction;
-        //enemy->speed = speed;
+        Vector2 startPos = Vector2(100.0f, 100.0f); //get_random_screenpos();
+        Vector2 direction = Vector2(1.0f, 1.0f); //get_random_direction();
+        float speed = 5000.0f; //get_random_speed(enemyPtr);
     }
-
-    // Make sure to reset all enemies, including enemies that were already in enemies
-    // for (size_t i = 0; i < enemies.size(); i++) {
-    //     Enemy* enemyPtr = enemies.at(i);
-    //     Vector2 startPos = Vector2(100.0f, 100.0f);//get_random_screenpos();
-    //     Vector2 direction = Vector2(1.0f, 1.0f);//get_random_direction();
-    //     float speed = 5.0f;//get_random_speed(enemyPtr);
-
-    //     enemies.at(i)->on_start(startPos, direction, speed);
-    // }
-
-    // Godot::print(enemies.size());
-
 }
 
-// void EnemyManager::start_enemies() 
-// {
-//     for (int i = 0; i < enemies.size(); i++) {
-//         Enemy* enemyPtr = enemies.at(i);
-//         Vector2 startPos = Vector2(100.0f, 100.0f); //get_random_screenpos();
-//         Vector2 direction = Vector2(1.0f, 1.0f); //get_random_direction();
-//         float speed = 5000.0f; //get_random_speed(enemyPtr);
-
-//         enemyPtr->on_start(startPos, direction, speed);
-//     }
+// Vector2 EnemyManager::get_random_screenpos() {
+//     int screenSizeX = get_viewport_rect().get_size().y;
+//     float startX = rand() % screenSizeX;
+//     Vector2 startPos = Vector2(startX, 0);
+//     return startPos;
 // }
 
-Vector2 EnemyManager::get_random_screenpos() {
-    int screenSizeX = get_viewport_rect().get_size().y;
-    float startX = rand() % screenSizeX;
-    Vector2 startPos = Vector2(startX, 0);
-    return startPos;
-}
+// Vector2 EnemyManager::get_random_direction() {
+//     float randX = rand() % 200 - 100;
+//     float randY = rand() % 100 + 1;
+//     return Vector2(randX, randY).normalized();
+// }
 
-Vector2 EnemyManager::get_random_direction() {
-    float randX = rand() % 200 - 100;
-    float randY = rand() % 100 + 1;
-    return Vector2(randX, randY).normalized();
-}
-
-float EnemyManager::get_random_speed(Enemy* enemy) {
-    //enemy->min_speed
-    float min_speed = 1000;
-    float max_speed = 2000;
-    int randInterval = max_speed - min_speed;
-    return (rand() % randInterval + min_speed)/3;
-}
+// float EnemyManager::get_random_speed(Enemy* enemy) {
+//     //enemy->min_speed
+//     float min_speed = 1000;
+//     float max_speed = 2000;
+//     int randInterval = max_speed - min_speed;
+//     return (rand() % randInterval + min_speed)/3;
+// }
 
