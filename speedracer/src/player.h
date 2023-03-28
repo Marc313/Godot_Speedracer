@@ -9,18 +9,20 @@ class Player : public KinematicBody2D {
     GODOT_CLASS(Player, KinematicBody2D)
 
 private:
-    float time_passed;
-    float time_emit;
     float speed;
     float acceleration;
     float friciton;
     Vector2 velocity;
     Vector2 startPos;
+    float spriteWidth;
 
     Input* input;
-    //Vector2 position;
 
     void check_collisions();
+    void _on_start();
+    void on_death();
+    void set_speed(float p_speed);
+    float get_speed();
 
 public:
     static void _register_methods();
@@ -32,10 +34,5 @@ public:
     void _ready();
     void _process(float delta);
     void _physics_process(float delta);
-
-    void _on_start();
-    void on_death();
-    void set_speed(float p_speed);
-    float get_speed();
 };
 }

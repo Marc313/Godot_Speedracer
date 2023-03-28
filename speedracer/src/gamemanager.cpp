@@ -2,6 +2,7 @@
 
 #include "gamemanager.h"
 #include "Input.hpp"
+#include "time.h"
 
 using namespace godot;
 
@@ -28,10 +29,11 @@ void GameManager::_init() {
 }
 
 void GameManager::_ready() {
-    
+    srand(time(NULL));
 }
 
 void GameManager::_process(float delta) {
+    // Change to press any key to continue
     if (isTimer) {
         timer -= delta;
         if (timer <= 0.0f) {
@@ -39,11 +41,6 @@ void GameManager::_process(float delta) {
             emit_signal("on_game_start");
         }
     }
-
-    // if (Input::get_singleton()->is_action_just_pressed("move_left")) {
-    //     _on_player_death();
-
-    // }
 }
 
 void GameManager::_on_player_death() {

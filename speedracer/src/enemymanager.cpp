@@ -9,12 +9,15 @@ using namespace godot;
 
 void EnemyManager::_register_methods()
 {
+    // Godot Methods
     register_method("_ready", &EnemyManager::_ready);
     register_method("_process", &EnemyManager::_process);
     register_method("_init", &EnemyManager::_init);
 
+    // Received Signals
     register_method("_on_game_start", &EnemyManager::_on_game_start);
 
+    // Properties
     register_property<EnemyManager, int>("numOfEnemies", &EnemyManager::numOfEnemies, 10);
 }
 
@@ -57,10 +60,6 @@ void EnemyManager::_on_game_start()
         gameManager->connect("on_game_start", enemy, "_on_game_start");
         gameManager->connect("on_game_end", enemy, "_on_game_end");
         enemies.push_back(enemy);
-
-        Vector2 startPos = Vector2(100.0f, 100.0f); //get_random_screenpos();
-        Vector2 direction = Vector2(1.0f, 1.0f); //get_random_direction();
-        float speed = 5000.0f; //get_random_speed(enemyPtr);
     }
 }
 

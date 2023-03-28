@@ -16,6 +16,11 @@ private:
     int score;
     void UpdateScoreText();
 
+    // Receiving Signals
+    void _on_enemy_death();
+    void _on_player_death();
+    void _on_game_start();
+
 public:
     static void _register_methods();
 
@@ -24,10 +29,5 @@ public:
 
     void _init();
     void _ready();
-    void _process(float delta);
-
-    // Receiving Signals
-    void _on_enemy_death();
-    void _on_player_death();
-    void _on_game_start();
+    //void _process(float delta);
 };}

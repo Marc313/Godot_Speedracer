@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "enemy.h"
 #include "enemymanager.h"
+#include "CollisionShape2D.hpp"
 
 using namespace godot;
 using namespace std;
@@ -33,7 +34,7 @@ Enemy::~Enemy() {
 void Enemy::_init() {
     min_speed = 100.0f;
 
-    speed = 5111.11f;
+    speed = 5000.0f;
     direction = Vector2(0.0f, 1.0f);
 }
 
@@ -42,12 +43,12 @@ void Enemy::_ready() {
     set_position(get_random_screenpos());
     direction = get_random_direction();
 
+    //spriteWidth = static_cast<CollisionShape2D*>(get_node("CollisionShape2D"))->get_shape();
+    spriteWidth = 50.0f;
 
-    Godot::print("Hello");
     Godot::print(("Speed: " + std::to_string(speed)).c_str());
     Godot::print(("Min_Speed: " + std::to_string(min_speed)).c_str());
     Godot::print(("Max_Speed: " + std::to_string(max_speed)).c_str());
-    //set_position(Vector2(100.0f, 100.0f));
 }
 
 void Enemy::_process(float delta) {
@@ -60,14 +61,19 @@ void Enemy::_process(float delta) {
 void Enemy::_physics_process(float delta) {
     move_and_slide(speed * direction * delta);
 
-    Vector2 pos = get_position();
+    const Vector2 pos = get_position();
     // Variant 1: Clamp enemy pos
-    // pos.x = std::clamp(pos.x, 0.0f, get_viewport_rect().get_size().x);
-    // set_position(pos);
+    // if (pos.x - spriteWidth/2 < 0 || pos.x + spriteWidth/2 > get_viewport_rect().get_size().x) 
+    // {
+    //     set_position(Vector2(std::clamp(pos.x, 0.0f + spriteWidth/2, get_viewport_rect().get_size().x - spriteWidth/2), pos.y));
+    // }
 
     // Variant 2: Change enemy xdirection
-    if (pos.x < 0 || pos.x > get_viewport_rect().get_size().x)
-    direction.x = get_random_direction().x;
+    if (pos.x - spriteWidth/2 < 0 
+        || pos.x + spriteWidth/2 > get_viewport_rect().get_size().x) 
+    {
+        direction.x = get_random_direction().x;
+    }
 }
 
 // void Enemy::on_start() {
@@ -82,44 +88,27 @@ void Enemy::_on_game_end() {
     this->queue_free();
 }
 
-// Cursed function
-void Enemy::on_start(Vector2 _startPos, Vector2 _direction, float _speed) {
-    speed = _speed;
-    direction = _direction;
-    set_position(_startPos);
-    //startPosition = _startPos;
-
-    //Godot::print(("Speed: " + std::to_string(speed)).c_str());
-}
-
-void Enemy::test(Vector2 _startPos, Vector2 _direction, float _speed)
-{
-    //Godot::print("TEST");
-    speed = _speed;
-    direction = _direction;
-    set_position(_startPos);
-}
-
 void Enemy::onDeath() {
     emit_signal("enemy_death");
     _ready();
     //on_start();
 }
 
-Vector2 Enemy::get_random_screenpos() {
-    int screenSizeX = get_viewport_rect().get_size().y;
-    float startX = rand() % screenSizeX;
-    Vector2 startPos = Vector2(startX, 0);
+const Vector2 Enemy::get_random_screenpos() {
+    const int screenSizeX = get_viewport_rect().get_size().y;
+    const float startX = rand() % screenSizeX;
+    const Vector2 startPos = Vector2(startX, 0);
     return startPos;
 }
 
-Vector2 Enemy::get_random_direction() {
-    float randX = rand() % 200 - 100;
-    float randY = rand() % 100 + 1;
+const Vector2 Enemy::get_random_direction() {
+    const float randX = rand() % 100 - 50;    // Value between -50 and 50
+    const float randY = 100;    
+    // randX is only -50 to 50, so the enemies can not go at and angle bigger than 45 degrees.
     return Vector2(randX, randY).normalized();
 }
 
-float Enemy::get_random_speed() {
-    int randInterval = max_speed - min_speed;
+const float Enemy::get_random_speed() {
+    const int randInterval = max_speed - min_speed;
     return (rand() % randInterval + min_speed);
 }

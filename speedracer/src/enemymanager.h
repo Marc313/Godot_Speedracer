@@ -14,16 +14,18 @@ class EnemyManager : public Node2D {
     GODOT_CLASS(EnemyManager, Node2D)
 
 private:
-    int numOfEnemies;
-
     std::vector<Enemy*> enemies;
     Ref<PackedScene> enemyPrefab;
     Node* uiManager;
     Node* gameManager;
 
-    void _on_game_start();
-    Vector2 get_random_screenpos();
-    float get_random_speed(Enemy* enemy);
+    int numOfEnemies;   // Property
+    void _on_game_start();  // Registered Signal
+    bool isTimer;
+    float timer;
+    // Vector2 get_random_screenpos();
+    // float get_random_speed(Enemy* enemy);
+    // static Vector2 get_random_direction();
 
 public:
     static void _register_methods();
@@ -34,9 +36,4 @@ public:
     void _init();
     void _ready();
     void _process(float delta);
-
-    static Vector2 get_random_direction();
-    bool isTimer;
-    float timer;
-
 };}

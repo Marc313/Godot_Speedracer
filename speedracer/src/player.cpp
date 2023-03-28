@@ -3,6 +3,7 @@
 #include "player.h"
 #include <KinematicCollision2D.hpp>
 #include <string>
+#include <algorithm>
 
 using namespace godot;
 
@@ -26,23 +27,24 @@ Player::~Player() {
     delete input;
 }
 
-void Player::_init() {
+void Player::_init() 
+{
     // initialize any variables here
-    time_passed = 0.0f;
-    time_emit = 0.0f;
     speed = 1000.0f;
     acceleration = 10000.0f;
     friciton = acceleration/speed;
     velocity = Vector2();
+    spriteWidth = 50.0f;
 }
 
-void godot::Player::_ready()
+void Player::_ready()
 {
     input = Input::get_singleton();
     startPos = get_position();
 }
 
-void Player::_process(float delta) {
+void Player::_process(float delta) 
+{
     Vector2 direction(0, 0);
     if (input->is_action_pressed("move_left")) 
     {
@@ -58,15 +60,20 @@ void Player::_process(float delta) {
     velocity -= velocity * friciton * delta;
 }
 
-void Player::_physics_process(float delta) {
-
-    //Godot::print(velocity);
+void Player::_physics_process(float delta) 
+{
     move_and_slide(velocity);
+    const Vector2 pos = get_position();
+    if (pos.x - spriteWidth/2 < 0 || pos.x + spriteWidth/2 > get_viewport_rect().get_size().x) 
+    {
+        set_position(Vector2(std::clamp(pos.x, 0.0f + spriteWidth/2, get_viewport_rect().get_size().x - spriteWidth/2), pos.y));
+    }
 
     check_collisions();
 }
 
-void Player::check_collisions() {
+void Player::check_collisions() 
+{
     for (int i = 0; i < get_slide_count(); i++)
     {
         auto collision = get_slide_collision(i);
@@ -85,8 +92,8 @@ void Player::_on_start()
     set_position(startPos);
 }
 
-void Player::on_death() {
-    Godot::print("Collision");
+void Player::on_death() 
+{
     this->set_visible(false);
     emit_signal("player_death");
 }
@@ -96,6 +103,7 @@ void Player::set_speed(float _speed)
     speed = _speed;
 }
 
-float Player::get_speed() {
+float Player::get_speed() 
+{
     return speed;
 }
