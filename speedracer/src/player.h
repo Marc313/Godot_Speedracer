@@ -18,11 +18,9 @@ private:
 
     Input* input;
 
-    void check_collisions();
     void _on_start();
+    void check_collisions();
     void on_death();
-    void set_speed(float p_speed);
-    float get_speed();
 
 public:
     static void _register_methods();

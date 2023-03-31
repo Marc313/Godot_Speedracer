@@ -7,6 +7,7 @@
 #include <Node2D.hpp>
 #include <time.h>
 #include <vector>
+#include <Timer.hpp>
 
 namespace godot {
 
@@ -18,14 +19,18 @@ private:
     Ref<PackedScene> enemyPrefab;
     Node* uiManager;
     Node* gameManager;
+    Timer* enemySpeedTimer;
+    Timer* extraEnemyTimer;
 
-    int numOfEnemies;   // Property
-    void _on_game_start();  // Registered Signal
-    bool isTimer;
-    float timer;
-    // Vector2 get_random_screenpos();
-    // float get_random_speed(Enemy* enemy);
-    // static Vector2 get_random_direction();
+    int numOfEnemiesOnStart;   // Property
+    float enemySpawnInterval;   // Property
+    float enemyTimerWaitTime;
+
+    void add_enemy();
+    // Registered Signals
+    void _on_game_start();
+    void _on_game_end();
+    void _on_ExtraEnemyTimer_timeout();
 
 public:
     static void _register_methods();

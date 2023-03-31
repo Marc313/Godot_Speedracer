@@ -11,14 +11,15 @@ void EnemyManager::_register_methods()
 {
     // Godot Methods
     register_method("_ready", &EnemyManager::_ready);
-    register_method("_process", &EnemyManager::_process);
-    register_method("_init", &EnemyManager::_init);
 
     // Received Signals
     register_method("_on_game_start", &EnemyManager::_on_game_start);
+    register_method("_on_game_end", &EnemyManager::_on_game_end);
+    register_method("_on_ExtraEnemyTimer_timeout", &EnemyManager::_on_ExtraEnemyTimer_timeout);
 
     // Properties
-    register_property<EnemyManager, int>("numOfEnemies", &EnemyManager::numOfEnemies, 10);
+    register_property<EnemyManager, int>("numOfEnemies", &EnemyManager::numOfEnemiesOnStart, 10);
+    register_property<EnemyManager, float>("enemySpawnInterval", &EnemyManager::enemySpawnInterval, 1.0f);
 }
 
 EnemyManager::EnemyManager() {
@@ -27,11 +28,14 @@ EnemyManager::EnemyManager() {
 EnemyManager::~EnemyManager() {
     delete uiManager;
     delete gameManager;
+    delete enemySpeedTimer;
+    delete extraEnemyTimer;
 }
 
 void EnemyManager::_init() {
-    numOfEnemies = 10;
-    isTimer = false;
+    numOfEnemiesOnStart = 10;
+    enemyTimerWaitTime = 30.0f;
+    enemySpawnInterval = 1.0f;
 }
 
 void EnemyManager::_ready() {
@@ -39,47 +43,50 @@ void EnemyManager::_ready() {
     ResourceLoader* loader = ResourceLoader::get_singleton();
     enemyPrefab = loader->load("res://_scenes/Enemy.tscn");
 
-    uiManager = (Node*)get_node("../UIManager");
-    gameManager = (Node*)get_node("/root/Main");
+    uiManager = static_cast<Node*>(get_node("../UIManager"));
+    gameManager = static_cast<Node*>(get_node("/root/Main"));
+    enemySpeedTimer = static_cast<Timer*>(get_node("EnemySpeedTimer"));
+    extraEnemyTimer = static_cast<Timer*>(get_node("ExtraEnemyTimer"));
+    enemyTimerWaitTime = extraEnemyTimer->get_wait_time();
     enemies = std::vector<Enemy*>();
-}
-
-void EnemyManager::_process(float delta)
-{
-
 }
 
 void EnemyManager::_on_game_start()
 {
     enemies.clear();
-    while (numOfEnemies > enemies.size()) {
-        Enemy* enemy = static_cast<Enemy*>(enemyPrefab->instance());
-        add_child(enemy);
-        enemy->connect("enemy_death", uiManager, "_on_enemy_death");
-        gameManager->connect("on_game_start", enemy, "_on_game_start");
-        gameManager->connect("on_game_end", enemy, "_on_game_end");
-        enemies.push_back(enemy);
+    add_enemy();
+
+    if (enemySpeedTimer) enemySpeedTimer->start();
+    if (extraEnemyTimer) 
+    {
+        extraEnemyTimer->set_wait_time(enemySpawnInterval);
+        extraEnemyTimer->start();
     }
 }
 
-// Vector2 EnemyManager::get_random_screenpos() {
-//     int screenSizeX = get_viewport_rect().get_size().y;
-//     float startX = rand() % screenSizeX;
-//     Vector2 startPos = Vector2(startX, 0);
-//     return startPos;
-// }
+void EnemyManager::_on_game_end()
+{
+    enemySpeedTimer->stop();
+    extraEnemyTimer->stop();
+}
 
-// Vector2 EnemyManager::get_random_direction() {
-//     float randX = rand() % 200 - 100;
-//     float randY = rand() % 100 + 1;
-//     return Vector2(randX, randY).normalized();
-// }
+void EnemyManager::add_enemy() {
+    Enemy* enemy = static_cast<Enemy*>(enemyPrefab->instance());
+    add_child(enemy);
+    enemy->connect("enemy_death", uiManager, "_on_enemy_death");
+    gameManager->connect("on_game_start", enemy, "_on_game_start");
+    gameManager->connect("on_game_end", enemy, "_on_game_end");
+    enemySpeedTimer->connect("timeout", enemy, "_on_speedtimer_timeout");
+    enemies.push_back(enemy);
 
-// float EnemyManager::get_random_speed(Enemy* enemy) {
-//     //enemy->min_speed
-//     float min_speed = 1000;
-//     float max_speed = 2000;
-//     int randInterval = max_speed - min_speed;
-//     return (rand() % randInterval + min_speed)/3;
-// }
+    if (extraEnemyTimer && numOfEnemiesOnStart <= enemies.size()) {
+        extraEnemyTimer->stop();
+        extraEnemyTimer->set_wait_time(enemyTimerWaitTime);
+        extraEnemyTimer->start();
+    }
+}
 
+void EnemyManager::_on_ExtraEnemyTimer_timeout()
+{
+    add_enemy();
+}

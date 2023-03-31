@@ -21,7 +21,6 @@ public:
     void _init();
     void _ready();
     void _process(float delta);
-    //void _input(InputEvent& event);
     void _on_player_death();
 
     float time_to_restart;

@@ -33,10 +33,10 @@ void UIManager::_ready() {
     if(pressToContinueLabel) pressToContinueLabel->set_visible(true);
     if(scoreLabel) scoreLabel->set_visible(false);
 
-    UpdateScoreText();
+    update_score_text();
 }
 
-void UIManager::UpdateScoreText() {
+void UIManager::update_score_text() {
     if (!scoreLabel) return;
     std::string newText = "Score: " + std::to_string(score);
     scoreLabel->set_text(newText.c_str());
@@ -44,7 +44,7 @@ void UIManager::UpdateScoreText() {
 
 void UIManager::_on_enemy_death() {
     score++;
-    UpdateScoreText();
+    update_score_text();
 }
 
 void UIManager::_on_player_death() {
@@ -59,5 +59,5 @@ void UIManager::_on_game_start() {
     if(pressToContinueLabel) pressToContinueLabel->set_visible(false);
 
     score = 0;
-    UpdateScoreText();
+    update_score_text();
 }

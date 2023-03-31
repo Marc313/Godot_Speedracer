@@ -12,7 +12,7 @@ void Player::_register_methods() {
     register_method("_ready", &Player::_ready);
     register_method("_physics_process", &Player::_physics_process);
 
-    register_method("_on_start", &Player::_on_start);
+    register_method("_on_game_start", &Player::_on_start);
 
     register_property<Player, float>("acceleration", &Player::acceleration, 10000.0f);
     register_property<Player, float>("friction", &Player::friciton, 10.0f);
@@ -55,7 +55,6 @@ void Player::_process(float delta)
         direction.x = 1;
     }
 
-
     velocity += direction * acceleration * delta;
     velocity -= velocity * friciton * delta;
 }
@@ -72,7 +71,13 @@ void Player::_physics_process(float delta)
     check_collisions();
 }
 
-void Player::check_collisions() 
+void Player::_on_start()
+{
+    this->set_visible(true);
+    set_position(startPos);
+}
+
+void Player::check_collisions()
 {
     for (int i = 0; i < get_slide_count(); i++)
     {
@@ -86,24 +91,8 @@ void Player::check_collisions()
     }
 }
 
-void Player::_on_start()
-{
-    this->set_visible(true);
-    set_position(startPos);
-}
-
 void Player::on_death() 
 {
     this->set_visible(false);
     emit_signal("player_death");
-}
-
-void Player::set_speed(float _speed)
-{
-    speed = _speed;
-}
-
-float Player::get_speed() 
-{
-    return speed;
 }

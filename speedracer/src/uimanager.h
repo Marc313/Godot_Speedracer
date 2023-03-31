@@ -15,7 +15,7 @@ private:
     Label* pressToContinueLabel;
 
     int score;
-    void UpdateScoreText();
+    void update_score_text();
 
     // Receiving Signals
     void _on_enemy_death();

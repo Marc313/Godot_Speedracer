@@ -11,6 +11,7 @@ collision_layer = 2
 script = ExtResource( 1 )
 min_speed = 5500.0
 max_speed = 8000.0
+speed_increment = 255.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 8.5 )

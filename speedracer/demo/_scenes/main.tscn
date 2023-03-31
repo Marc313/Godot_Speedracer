@@ -11,7 +11,7 @@
 [node name="Main" type="Node"]
 script = ExtResource( 5 )
 
-[node name="Garry" parent="." instance=ExtResource( 1 )]
+[node name="Ship" parent="." instance=ExtResource( 1 )]
 position = Vector2( 490, 475 )
 scale = Vector2( 1.5, 1.5 )
 script = ExtResource( 4 )
@@ -21,21 +21,29 @@ script = ExtResource( 4 )
 [node name="EnemyManager" parent="." instance=ExtResource( 3 )]
 numOfEnemies = 5
 
-[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+[node name="EnemySpeedTimer" type="Timer" parent="EnemyManager"]
+wait_time = 5.0
+
+[node name="ExtraEnemyTimer" type="Timer" parent="EnemyManager"]
+wait_time = 30.0
+
+[node name="WaterBackground" type="ParallaxBackground" parent="."]
 script = ExtResource( 7 )
 "Scroll Speed" = 50.0
 
-[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+[node name="ParallaxLayer" type="ParallaxLayer" parent="WaterBackground"]
 motion_mirroring = Vector2( 0, 960 )
 
-[node name="Water" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+[node name="Water" type="Sprite" parent="WaterBackground/ParallaxLayer"]
 position = Vector2( 520, 188 )
 scale = Vector2( 1.75, 1.5 )
 z_index = -1
 texture = ExtResource( 6 )
 
 [connection signal="on_game_end" from="." to="UIManager" method="_on_game_end"]
-[connection signal="on_game_start" from="." to="Garry" method="_on_start"]
+[connection signal="on_game_end" from="." to="EnemyManager" method="_on_game_end"]
+[connection signal="on_game_start" from="." to="Ship" method="_on_game_start"]
 [connection signal="on_game_start" from="." to="UIManager" method="_on_game_start"]
 [connection signal="on_game_start" from="." to="EnemyManager" method="_on_game_start"]
-[connection signal="player_death" from="Garry" to="." method="_on_player_death"]
+[connection signal="player_death" from="Ship" to="." method="_on_player_death"]
+[connection signal="timeout" from="EnemyManager/ExtraEnemyTimer" to="EnemyManager" method="_on_ExtraEnemyTimer_timeout"]
