@@ -42,7 +42,6 @@ void EnemyManager::_ready() {
     uiManager = (Node*)get_node("../UIManager");
     gameManager = (Node*)get_node("/root/Main");
     enemies = std::vector<Enemy*>();
-    _on_game_start();
 }
 
 void EnemyManager::_process(float delta)

@@ -12,6 +12,7 @@ class UIManager : public Node2D {
 private:
     Label* scoreLabel;
     Label* endLabel;
+    Label* pressToContinueLabel;
 
     int score;
     void UpdateScoreText();

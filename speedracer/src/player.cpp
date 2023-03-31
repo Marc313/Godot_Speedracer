@@ -76,7 +76,7 @@ void Player::check_collisions()
 {
     for (int i = 0; i < get_slide_count(); i++)
     {
-        auto collision = get_slide_collision(i);
+        Ref<KinematicCollision2D> collision = get_slide_collision(i);
         Node2D* colliderNode = static_cast<Node2D*>(collision->get_collider());
 
         // If collider is in enemy group, player is hit.
